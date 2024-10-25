@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [20.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -26,11 +26,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
+    - run: npm i
     - run: npm run docs:build --if-present
     # 部署到阿里云
     - name: Deploy to Aliyun
-      uses: easingthemes/ssh-deploy@v2.1.1
+      uses: easingthemes/ssh-deploy@main
       env:
         # 私钥
         SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
