@@ -26,9 +26,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm i
+    - run: npm install
     - run: npm run docs:build --if-present
-    - run: ls /docs/.vuepress/dist/
+    - run: ls ./docs/.vuepress/dist/
     # 部署到阿里云
     - name: Deploy to Aliyun
       uses: easingthemes/ssh-deploy@main
@@ -38,7 +38,7 @@ jobs:
         # scp参数
         ARGS: "-avzr --delete"
         # 源目录，编译后生成的文件目录
-        SOURCE: "/docs/.vuepress/dist/"
+        SOURCE: "./docs/.vuepress/dist/"
         # 服务器ip：换成你的服务器IP
         REMOTE_HOST: ${{ secrets.REMOTE_IP }}
         # 用户
