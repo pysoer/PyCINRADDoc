@@ -20,20 +20,29 @@ fig.gridlines(draw_labels=True, linewidth=1, color="white")  # 用这个来画�
 
 # 要在地图上画一个红色大圆点？
 import cartopy.crs as ccrs
-
 fig.geoax.scatter(
-    x=112.34, y=29.22, s=500, c="r", marker=".", transform=ccrs.PlateCarree()
+    x=112.34, y=32.22, s=500, c="r", marker=".", transform=ccrs.PlateCarree()
 )
+# 也就是说fig.geoax就是画布，你可以在上面画任何东西
+# 至于需要画什么上去，请参考cartopy的文档：
+# https://www.osgeo.cn/pygis/cartopy-feature.html#id2
+
 
 # 将图片保存
 # fig("d:/")
 # 或者 fig("d:/abc.png")
 # 或者 imgName = fig("d:/")
 ```
-```md
-<matplotlib.collections.PathCollection at 0x2242392e4f0>
-```
+
 ![An image](./image_19.png)
+
+```python
+# 画一个透明图
+fig = PPI(data, dpi=300, style="transparent")
+```
+![An image](./image_23.png)
+
+
 ## 剖面图
 ```python
 nFiles = basePath + "/cinrad/bz2c/Z_RADR_I_Z9737_20231025220414_O_DOR_SA_CAP_FMT.bin.bz2"
@@ -46,11 +55,11 @@ fig = cinrad.visualize.Section(sec, interpolate=True) # interpolate 是否插值
 plt.scatter(0.5, 3, s=100, c="red", marker="o" )  # 在x轴的0.5位置，3公里高度位置画个点
 plt.axline((0, 2), (1, 2), linewidth=2, color="red")  # 在2公里高度画根线
 ```
-```md
-<matplotlib.lines.AxLine at 0x206d4b9bdc0>
-```
+
 ![An image](./image_20.png)
 ##  在PPI图下方添加剖面图
+
+**在pycharm/sublime/spyder中可能会莫名其妙没图，请到cmd下直接运行脚本并保存为图片查看**
 ```python
 # VCS画图测试
 nFiles = basePath + "/cinrad/bz2c/Z_RADR_I_Z9737_20231025220414_O_DOR_SA_CAP_FMT.bin.bz2"
@@ -69,18 +78,29 @@ fig.plot_cross_section(sec, linecolor="red")
 Cinrad自带了很多的标准色标，一般不需要自定义；  
 如果你需要使用其他色标，则可以使用下面的方法自定义一个
 ```python
-nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9735_20240511082558_P_DOR_SAD_HCL_250_230_5_FMT.bin"
+
+nFiles = basePath + "Z_RADR_I_Z9735_20240511082558_P_DOR_SAD_HCL_250_230_5_FMT.bin"
 f = cinrad.io.read_auto(nFiles)
 data = f.get_data()
-import matplotlib.colors as cmx
-from cinrad.visualize.gpf import _cmap
 
-cmapFile = (
-    basePath + "HCL"  # 色标文件参照/data/colormap/目录下的格式，也放到这个目录下
-)
-cmap = _cmap(cmapFile)["cmap"]
+import matplotlib.colors as cmx
+color_str=[
+    [0, 251, 144],
+    [0, 187, 0],
+    [255, 0, 0],
+    [208, 208, 96],
+    [156, 156, 156],
+    [118, 118, 118],
+    [0, 255, 255],
+    [0, 144, 255],
+    [255, 176, 176],
+    [210, 132, 132],
+    [231, 0, 255],
+]
+cmap = cmx.ListedColormap(np.array(color_str) / 255.0) # 除以255是因为matplotlib的颜色取值范围是0-1
 norm = cmx.Normalize(0, 10)  # 取值区间
 label = ["小雨", "大雨", "冰雹", "大雨滴", "晴空回波", "地物", "干雪", "湿雪", "冰晶", "霰", "未知",""]
+
 fig = PPI(
     data,
     add_city_names=True,
@@ -91,28 +111,56 @@ fig = PPI(
     label=label,
 )
 # fig("d:/temp/")
-# HCL.map文件内容如下：
-"""
-*NAME:HCL
-*AUTHOR:CMA
-*TYPE:LISTED
-*UNIT:None
-*UNDER:0/251/144
-*OVER:231/0/255
-0 0/251/144
-1 0/187/0
-2 255/0/0
-3 208/208/96
-4 156/156/156
-5 118/118/118
-6 0/255/255
-7 0/144/255
-8 255/176/176
-9 210/132/132
-10 231/0/255
-"""
+```
+
+![An image](./image_22.png)
+
+## 三维可视化
+抛砖引玉，举个栗子⛳
+```python
+# 读取数据，这里以BR为例
+nFiles = basePath + "Z_RADR_I_Z9737_20231025220414_O_DOR_SA_CAP_FMT.bin.bz2"
+f = cinrad.io.read_auto(nFiles)
+
+r = f.get_data(0, 230, "REF")
+X = r.longitude.values.flatten()  #读取ppi中经度纬度高度和反射率数值，并转化成一维
+Y = r.latitude.values.flatten()
+Z = r.height.values.flatten()
+value = r.REF.values.flatten()
+r
 ```
 ```md
-'\n*NAME:HCL\n*AUTHOR:CMA\n*TYPE:LISTED\n*UNIT:None\n*UNDER:0/251/144\n*OVER:231/0/255\n0 0/251/144\n1 0/187/0\n2 255/0/0\n3 208/208/96\n4 156/156/156\n5 118/118/118\n6 0/255/255\n7 0/144/255\n8 255/176/176\n9 210/132/132\n10 231/0/255\n'
+<xarray.Dataset>
+Dimensions:    (azimuth: 366, distance: 230)
+Coordinates:
+  * azimuth    (azimuth) float32 1.594 1.611 1.628 1.645 ... 1.565 1.582 1.599
+  * distance   (distance) float64 1.0 2.0 3.0 4.0 ... 227.0 228.0 229.0 230.0
+Data variables:
+    REF        (azimuth, distance) float64 nan -26.5 -19.0 ... 21.0 21.5 21.5
+    longitude  (azimuth, distance) float64 112.0 112.0 112.1 ... 114.4 114.4
+    latitude   (azimuth, distance) float64 28.47 28.47 28.47 ... 28.41 28.41
+    height     (azimuth, distance) float64 0.7585 0.7671 0.7758 ... 5.767 5.802
+Attributes:
+    elevation:        0.48339844
+    range:            230
+    scan_time:        2023-10-25 22:04:14
+    site_code:        Z9999
+    site_name:        伊宁
+    site_longitude:   119
+    site_latitude:    28
+    tangential_reso:  1.0
+    nyquist_vel:      8.571463
+    task:             VCP21
 ```
-![An image](./image_22.png)
+画图
+```python
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+
+fig = plt.figure(figsize=(10, 10), dpi=200)
+ax = Axes3D(fig)
+fig.add_axes(ax)  #新版本cartopy或Mac下，最好是加上这一句
+# cmap = plt.get_cmap("CN_ref")
+ax.scatter(X, Y, Z, c=value,alpha=0.8)
+```
+![An image](./image_24.png)

@@ -1,3 +1,18 @@
-#main-title{
-    margin-top: 180px;
+@font-face {
+	font-family: Dancing_Script;
+	src: url("../DancingScript-Bold.ttf");
+}
+
+#main-title {
+	margin-top: 1px;
+	font-family: Dancing_Script, "Rakkas", "Alegreya", "Lora";
+	font-size: 3em;
+	font-weight: bold;
+}
+
+.home .hero img {
+    max-width: 100%;
+    max-height: 155px;
+    display: block;
+    margin: 3rem auto 1.5rem;
 }

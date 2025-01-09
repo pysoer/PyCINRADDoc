@@ -1,12 +1,11 @@
 # 非标准格式基数据
 SB/CC/CA等少部分数据最好是用CinradReader并手动输入参数radar_type
+`cinrad.io.CinradReader/read_auto`
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9636_20200625140000_O_DOR_SB_CAP.bz2"
-f = cinrad.io.read_auto(nFiles)
-# f = cinrad.io.CinradReader(nFiles, radar_type="SB")
+f = cinrad.io.CinradReader(nFiles, radar_type="SB")
 print(type(f).__name__)
 data = f.get_data(0, 230, "REF")
-
 data
 ```
 ```md
@@ -36,7 +35,7 @@ Attributes:
     task:             VCP21
 ```
 ```python
-f.el
+f.el # 仰角
 ```
 ```md
 array([ 0.49987793,  0.49987793,  1.44470215,  1.44470215,  2.39501953,
@@ -44,25 +43,25 @@ array([ 0.49987793,  0.49987793,  1.44470215,  1.44470215,  2.39501953,
        19.49523926])
 ```
 ```python
-f.available_product(0)
+f.available_product(0) # 第1个仰角可用产品
 ```
 ```md
 ['REF', 'VEL', 'SW', 'azimuth', 'RF']
 ```
 ```python
-f.Rreso
+f.Rreso #分辨率
 ```
 ```md
 np.float64(1.0)
 ```
 ```python
-f.angleindex_r
+f.angleindex_r # 仰角索引
 ```
 ```md
 array([0, 2, 4, 5, 6, 7, 8, 9])
 ```
 ```python
-f.angleindex_v
+f.angleindex_v # 速度的仰角索引
 ```
 ```md
 array([1, 3, 4, 5, 6, 7, 8, 9])

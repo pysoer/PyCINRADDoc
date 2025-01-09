@@ -1,10 +1,12 @@
 # SWAN3产品
+- cinrad.io.SWAN(file, product)接口用于读取SWAN3产品，例如CR、COTREC风场等。
+  * file: 文件路径
+  * prduct: 产品类型，例如`CR`。部分文件内产品类型是乱码或者不正确时，可以输入此参数来指定。
 ## 三维拼图 MOSAIC
+也就是多层CR拼图
 ```python
-import numpy as np
-
 nFiles = basePath + "/cinrad/bz2/Z_OTHE_RADAMOSAIC_20240604020600.bin.bz2"
-f = cinrad.io.SWAN(nFiles)
+f = cinrad.io.SWAN(nFiles, product="CR")
 data = f.get_data()
 data
 ```
@@ -25,15 +27,11 @@ Attributes:
     range:            nan
     elevation:        0
 ```
-```python
-f.data.shape
-```
-```md
-(21, 1101, 1301)
-```
+将CR小于0的值屏蔽
 ```python
 data["CR"].values = np.ma.masked_less(data["CR"].values, 0)
 ```
+选择高度为5.0的数据
 ```python
 dt_1 = data.sel(height=5.0)
 dt_1
@@ -59,11 +57,11 @@ Attributes:
 fig = PPI(dt_1, style="black")
 ```
 ![An image](./image_13.png)
-##CR
+
+## 拼图 CR
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_OTHE_RADAMCR_20220525085400.bin.bz2"
-# f = cinrad.io.read_auto(nFiles)
-f = cinrad.io.SWAN(nFiles)  # 用这种接口加上参数的话，可以直接PPI画图
+f = cinrad.io.SWAN(nFiles)
 data = f.get_data()
 data
 ```
@@ -84,7 +82,8 @@ Attributes:
     range:            nan
     elevation:        0
 ```
-## TREC
+## COTREC风场
+不支持画图
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_TREC_20240520233600.BIN.BZ2"
 f = cinrad.io.SWAN(nFiles,product="TREC")
@@ -112,7 +111,7 @@ Attributes:
 这几个数据都是扩大了10倍存储的，读取后记得除以10
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_OTHE_RADAMTOP_20240604014800.BIN.BZ2"
-f = cinrad.io.SWAN(nFiles,product="ET")
+f = cinrad.io.SWAN(nFiles, product="ET")
 data = f.get_data()
 data = data / 10
 data.max()

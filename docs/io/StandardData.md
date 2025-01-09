@@ -1,10 +1,11 @@
 # 标准格式基数据
-这里支持的有：标准格式雷达、标准格式相控阵雷达基数据，两种数据一个接口。**PyCINRAD独有**
+这里支持的有：标准格式雷达、标准格式相控阵雷达基数据，两种数据一个接口`cinrad.io.StandardData`。**PyCINRAD独有**
+## 数据读取
+
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9532_20200517124300_O_DOR_SAD_CAP_FMT.bin.bz2"
 f= cinrad.io.read_auto(nFiles)
 data = f.get_data(0,230,"REF") # 读取第一层的反射率
-
 data
 ```
 ```md
@@ -32,6 +33,36 @@ Attributes:
 ```
 ```python
 f.available_product(0) #第0个仰角有哪些产品可以读取
+```
+```md
+['TREF', 'REF', 'SQI', 'ZDR', 'RHO', 'PHI', 'KDP', 'SNRH']
+```
+```python
+# 读取90度、120公里处的数据
+data.interp(azimuth=np.deg2rad(90),distance=120)
+```
+```md
+<xarray.Dataset>
+Dimensions:    ()
+Coordinates:
+    azimuth    float64 5.236
+    distance   int32 180
+Data variables:
+    ZDR        float64 0.3553
+    longitude  float64 118.5
+    latitude   float64 36.8
+    height     float64 3.6
+Attributes:
+    elevation:        0.48339844
+    range:            230
+    scan_time:        2020-05-17 11:00:28
+    site_code:        Z9999
+    site_name:        伊宁
+    site_longitude:   120
+    site_latitude:    35
+    tangential_reso:  0.25
+    nyquist_vel:      8.37801
+    task:             VCP21D
 ```
 ```md
 ['TREF', 'REF', 'SQI', 'ZDR', 'RHO', 'PHI', 'KDP', 'SNRH']
@@ -81,7 +112,7 @@ f.el # 雷达的仰角
  np.float32(19.511719)]
 ```
 ```python
-f.scan_config
+f.scan_config # 扫描配置块
 ```
 ```md
 [ScanConfig(process_mode=1, wave_form=0, PRF1=322.0, PRF2=322.0, dealias_mode=1, azimuth=0.0, elev=0.48339844, start_angle=0.0, end_angle=0.0, angular_reso=1.0, scan_spd=11.34, log_reso=250, dop_reso=250, max_range1=460000, max_range2=460000, start_range=0, sample1=28, sample2=28, phase_mode=0, atmos_loss=0.011, nyquist_spd=8.37801, moments_mask=69286, moments_size_mask=1152, misc_filter_mask=255, SQI_thres=0.4, SIG_thres=5.0, CSR_thres=60.0, LOG_thres=3.0, CPA_thres=0.0, PMI_thres=0.45, DPLOG_thres=5.0, res_thres=void(b'\x00\x00\x00\x00'), dBT_mask=1, dBZ_mask=1, vel_mask=1, sw_mask=1, DP_mask=32, res_mask=void(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'), scan_sync=0, direction=1, ground_clutter_classifier_type=3, ground_clutter_filter_type=1, ground_clutter_filter_notch_width=3, ground_clutter_filter_window=1, res4=void(b'\x01\x03\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')),
@@ -97,14 +128,14 @@ f.scan_config
  ScanConfig(process_mode=1, wave_form=2, PRF1=1181.0, PRF2=1181.0, dealias_mode=1, azimuth=0.0, elev=19.511719, start_angle=0.0, end_angle=0.0, angular_reso=1.0, scan_spd=18.0, log_reso=250, dop_reso=250, max_range1=124000, max_range2=124000, start_range=0, sample1=65, sample2=65, phase_mode=0, atmos_loss=0.011, nyquist_spd=30.728043, moments_mask=69278, moments_size_mask=1152, misc_filter_mask=63, SQI_thres=0.4, SIG_thres=5.0, CSR_thres=60.0, LOG_thres=3.0, CPA_thres=0.0, PMI_thres=0.45, DPLOG_thres=5.0, res_thres=void(b'\x00\x00\x00\x00'), dBT_mask=1, dBZ_mask=1, vel_mask=1, sw_mask=1, DP_mask=32, res_mask=void(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'), scan_sync=0, direction=0, ground_clutter_classifier_type=3, ground_clutter_filter_type=1, ground_clutter_filter_notch_width=3, ground_clutter_filter_window=1, res4=void(b'\x03\x03\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'))]
 ```
 ```python
-f.scantime
+f.scantime #体扫时间，数据里面的时间都是UTC时间
 ```
 ```md
 datetime.datetime(2020, 5, 17, 12, 43, tzinfo=datetime.timezone.utc)
 ```
 ```python
-vel0 = f.get_data(1,230,"VEL") # 速度只有1,3,4....10
-
+# 读取速度数据
+vel0 = f.get_data(1, 230, "VEL") # 速度只有1,3,4....10
 vel0
 ```
 ```md
@@ -131,8 +162,17 @@ Attributes:
     nyquist_vel:      26.382925
     task:             VCP21D
 ```
+
+## 修改体扫时间
+修改体扫时间、雷达名称、站号、经纬度等信息
+
 ```python
-f.scantime = f.scantime + datetime.timedelta(hours=8) # 修改为北京时间
+f.scantime = f.scantime + datetime.timedelta(hours=8) 
+# 还可以修改雷达名称、站号、经纬度等信息
+f.name = "我是站名"
+f.code = "Z9999"
+f.stationlat = 39.9
+f.stationlon = 116.4
 velbjt = f.get_data(1,230,"VEL") # 速度只有1,3,4....10
 velbjt
 ```
@@ -160,7 +200,8 @@ Attributes:
     nyquist_vel:      26.382925
     task:             VCP21D
 ```
-相关系数CC
+## 读取双偏振参量
+- 例如：相关系数CC=RHO、差分反射率ZDR、差分相移KDP
 ```python
 cc = f.get_data(0,230,"RHO") # KDP/ZDR/RHO
 fig = cinrad.visualize.PPI(cc,style="black",add_city_names=True)
@@ -170,12 +211,12 @@ fig = cinrad.visualize.PPI(cc,style="black",add_city_names=True)
 # 或者 imgName = fig("d:/")
 ```
 ![An image](./image_1.png)
-## 计算CR
-```python
-r_list = list(f.iter_tilt(230, 'REF'))
-cr = cinrad.calc.quick_cr(r_list)
 
-cr
+## 极坐标系转经纬度
+注意：`v1.9.2+`支持
+```python
+vel0_xy = cinrad.calc.polar_to_xy(vel0)
+vel0_xy
 ```
 ```md
 <xarray.Dataset> Size: 8MB
@@ -184,9 +225,9 @@ Coordinates:
   * latitude   (latitude) float64 8kB 29.93 29.93 29.94 ... 34.06 34.07 34.07
   * longitude  (longitude) float64 8kB 109.6 109.6 109.6 ... 114.4 114.4 114.4
 Data variables:
-    CR         (latitude, longitude) float64 8MB nan nan nan nan ... nan nan nan
+    VEL        (latitude, longitude) float64 8MB nan nan nan nan ... nan nan nan
 Attributes:
-    elevation:        0
+    elevation:        0.48339844
     range:            230
     scan_time:        2020-05-17 12:43:00
     site_code:        Z9999
@@ -194,89 +235,26 @@ Attributes:
     site_longitude:   112.0
     site_latitude:    32.0
     tangential_reso:  0.25
-    nyquist_vel:      30.728043
+    nyquist_vel:      26.382925
     task:             VCP21D
 ```
+转完就可以插值查找数据了~
 ```python
-cr.sel(latitude=30.0,longitude=120.0,method="nearest")
+vel0_xy.interp(latitude=30,longitude=110,method='nearest')
 ```
 ```md
-<xarray.Dataset> Size: 24B
+<xarray.Dataset>
 Dimensions:    ()
 Coordinates:
-    latitude   float64 8B 30.0
-    longitude  float64 8B 114.4
+    latitude   int32 30
+    longitude  int32 110
 Data variables:
-    CR         float64 8B nan
-Attributes:
-    elevation:        0
-    range:            230
-    scan_time:        2020-05-17 12:43:00
-    site_code:        Z9999
-    site_name:        伊宁
-    site_longitude:   112.0
-    site_latitude:    32.0
-    tangential_reso:  0.25
-    nyquist_vel:      30.728043
-    task:             VCP21D
+    VEL        float64 nan
+Attributes: []
 ```
-## 计算ET
-```python
-et = cinrad.calc.quick_et(r_list)
 
-et
-```
-```md
-<xarray.Dataset> Size: 8MB
-Dimensions:    (azimuth: 361, distance: 920)
-Coordinates:
-  * azimuth    (azimuth) float64 3kB 0.0 0.01745 0.03491 ... 6.248 6.266 6.283
-  * distance   (distance) float64 7kB 0.25 0.5 0.75 1.0 ... 229.5 229.8 230.0
-Data variables:
-    ET         (azimuth, distance) float64 3MB nan nan nan ... 5.034 5.043 5.052
-    longitude  (azimuth, distance) float64 3MB 112.0 112.0 112.0 ... 112.0 112.0
-    latitude   (azimuth, distance) float64 3MB 32.0 32.0 32.01 ... 34.07 34.07
-Attributes:
-    elevation:        0
-    range:            230
-    scan_time:        2020-05-17 12:43:00
-    site_code:        Z9999
-    site_name:        伊宁
-    site_longitude:   112.0
-    site_latitude:    32.0
-    tangential_reso:  0.25
-    nyquist_vel:      8.37801
-    task:             VCP21D
-```
-```python
-# 计算VIL、VILD
-# vil = cinrad.calc.quick_vil(r_list)
-# vild = cinrad.calc.quick_vild(r_list)
-```
-```python
-# 画个图试试
-fig = cinrad.visualize.PPI(et,style="black")
-# 将图片保存
-# fig("d:/")
-# 或者 fig("d:/abc.png")
-# 或者 imgName = fig("d:/")
-```
-![An image](./image_2.png)
-## 计算HCL
-CINRAD使用的论文中的算法（详见github底部）
-```python
-nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9735_20240511082558_O_DOR_SAD_CAP_FMT.bin.bz2"
-f = cinrad.io.read_auto(nFiles)
-ref = f.get_data(0, 230, "REF")  # 这里全部使用的是第一个仰角的
-zdr = f.get_data(0, 230, "ZDR")
-rho = f.get_data(0, 230, "RHO")
-kdp = f.get_data(0, 230, "KDP")
-cHCL = cinrad.calc.hydro_class(ref, zdr, rho, kdp, band="S")  # band手动输入S/C/X
-cHCL
-fig = cinrad.visualize.PPI(cHCL, add_city_names=True, dpi=300, style="black")
-```
-![An image](./image_3.png)
 ## 导出为pyart
+请先安装arm_pyart: `conda install -c conda-forge arm_pyart`
 ```python
 from cinrad.io.export import standard_data_to_pyart
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9731_20240510070522_O_DOR_SAD_CAP_FMT.bin.bz2"

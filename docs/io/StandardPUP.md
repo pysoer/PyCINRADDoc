@@ -1,12 +1,13 @@
 # 标准格式产品ROSE2.0
-已测试支持的产品：HCL、HI、V、MAX、HSR、WER、STI、CC、KDP、PDP、R、ZDR、CR、M、OHP、CAR、DOHP、DSTP、STP、VIL、SRM、THP、TVS、ET、VWP、DTHP、UAM、SWP、CAPPI
-已测试不支持的产品：ML、SS、CS
+`cinrad.io.StandardPUP`支持绝大部分ROSE_PUP的产品文件读取。
+- 已测试支持的产品：HCL、HI、V、MAX、HSR、WER、STI、CC、KDP、PDP、R、ZDR、CR、M、OHP、CAR、DOHP、DSTP、STP、VIL、SRM、THP、TVS、ET、VWP、DTHP、UAM、SWP、CAPPI
+- 已测试不支持的产品：ML、SS、CS    
+
 ## BR产品
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9094_20230402071419_P_DOR_CAD_R_300_400_5_FMT.bin"
 f = cinrad.io.read_auto(nFiles)
 dt = f.get_data()
-
 dt
 ```
 ```md
@@ -36,7 +37,6 @@ Attributes:
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9730_20240510000142_P_DOR_SB_CR_250X250_230_NUL_FMT.bin"
 f = cinrad.io.read_auto(nFiles)
 dt = f.get_data()
-
 dt
 ```
 ```md
@@ -118,13 +118,7 @@ Attributes:
     tangential_reso:  0.25
     center_height:    621
 ```
-## NEXRAD Level 3产品
-```python
-# 调用read_auto，会跳转到PUP接口，但是支持的产品类型比较少。
-nFiles = basePath + "/cinrad/bz2/KCYS_SDUS25_N3UCYS_202405160000"
-f = cinrad.io.read_auto(nFiles)
-print(f)
-```
+
 ## HCL产品
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9735_20240511082558_P_DOR_SAD_HCL_250_230_5_FMT.bin"
@@ -352,12 +346,9 @@ f = cinrad.io.read_auto(nFiles)
 print(type(f).__name__)
 dt = f.get_data()
 dt
-# CAPPI是可以多层的，因此画图前需要将height维度降维
-# dt0 = dt.sel(height=dt.coords["height"][0])
 ```
 ```md
 StandardPUP
-
 ```
 ```md
 <xarray.Dataset> Size: 12MB
@@ -381,6 +372,14 @@ Attributes:
     tangential_reso:  0.15
     task:             VCP21D
 ```
+```python
+# CAPPI是可以多层的，因此画图前需要将height维度降维
+dt0 = dt.sel(height=dt.coords["height"][0])
+# 还得重命名变量，因为CAPPI的变量名是CAPPI，而不是REF
+dt0 = dt0.rename({"CAPPI":"REF"})
+fig = cinrad.visualize.PPI(dt0)
+```
+![An image](./image_16.png)
 ## HI产品
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9094_20230402070825_P_DOR_CAD_HI_NUL_200_NUL_FMT.bin"
@@ -413,7 +412,6 @@ Attributes:
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9094_20230402072013_P_DOR_CAD_OHP_150_200_NUL_FMT.bin"
 f = cinrad.io.read_auto(nFiles)
 data = f.get_data()
-
 data
 ```
 ```md

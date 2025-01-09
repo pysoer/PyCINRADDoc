@@ -1,5 +1,5 @@
-# 画图
-PyCINRAD具备单独的画图接口，即`cinrad.visualize`，该模块支持以下参数：
+# 数据可视化
+PyCINRAD具备单独的画图接口，即`cinrad.visualize.PPI`，该函数有以下参数：
 |参数|功能|
 |:-:|:-:|
 |`cmap`|色阶|
@@ -12,8 +12,11 @@ PyCINRAD具备单独的画图接口，即`cinrad.visualize`，该模块支持以
 |`section`|在`ppi`图中绘制的剖面的数据，为`xarray.Dataset`类型|
 |`style`|背景颜色，可设置为黑色`black`或者白色`white`或者透明`transparent`|
 |`add_city_names`|标注城市名|
-PPI支持以下`xarray.Dataset`类型数据：
 
+
+PPI支持`xarray.Dataset`类型数据：
+
+能够画图的数据类型有：
 "REF":"Base Reflectivity"  
 "VEL":"Base Velocity"  
 "CR":"Composite Ref."  

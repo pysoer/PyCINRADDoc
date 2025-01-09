@@ -1,4 +1,6 @@
-# 探测中心天气雷达拼图系统v3产品
+# 探测中心拼图v3.0产品
+cinrad.io.MocMosaic和cinrad.io.read_auto支持读取探测中心拼图v3.0产品，包括拼图和单站产品。    
+需要版本>=1.9.0
 ## 拼图
 ```python
 # MocMosaic
@@ -24,7 +26,7 @@ Attributes:
     elevation:        0
 ```
 ```python
-dt.max()
+dt.max() # 最大的反射率
 ```
 ```md
 <xarray.Dataset> Size: 8B
@@ -40,7 +42,7 @@ f.header["height"]
 array([0], dtype=uint16)
 ```
 ```python
-# 计算CREF大于35的数量
+# 计算REF大于35的数量，这代表不了面积
 dt["CR"].values[dt["CR"].values > 35].shape
 ```
 ```md
@@ -48,17 +50,14 @@ dt["CR"].values[dt["CR"].values > 35].shape
 ```
 ```python
 # 画图
-# dt = dt.rename({"CREF": "CR"})  # 重命名，因为PPI并不支持CAP.v1.9.1以下需要这句
+# dt = dt.rename({"CREF": "CR"})  # 重命名，因为PPI并不支持CAP，v1.9.1以下需要这句
 fig = PPI(dt, style="black", extent=[105, 110, 30, 35], add_city_names=True)
 ```
 ![An image](./image_14.png)
 ## 单站
+### 产品CAPPI
 ```python
-# MocMosaic
-nFiles = (
-    basePath
-    + "cinrad/bz2/Z_RADA_C_BABJ_20240520001131_P_DOR_Z9734_CAP_20240520_000532.bin"
-)
+nFiles = "Z_RADA_C_BABJ_20240520001131_P_DOR_Z9734_CAP_20240520_000532.bin"
 f = cinrad.io.read_auto(nFiles)
 dt = f.get_data()
 dt
@@ -75,7 +74,7 @@ Data variables:
 Attributes:
     scan_time:        2024-05-20 00:05:00
     site_code:        Z9734
-    site_name:        衡阳g_Z9734
+    site_name:        g_Z9734
     site_longitude:   112.0
     site_latitude:    26.0
     tangential_reso:  0.1
@@ -100,7 +99,7 @@ Data variables:
 Attributes:
     scan_time:        2024-05-20 00:05:00
     site_code:        Z9734
-    site_name:        衡阳g_Z9734
+    site_name:        g_Z9734
     site_longitude:   112.0
     site_latitude:    26.0
     tangential_reso:  0.1
@@ -112,12 +111,10 @@ Attributes:
 fig = PPI(dt0, style="black", add_city_names=True)
 ```
 ![An image](./image_15.png)
+
+### 普通反射率数据    
 ```python
-# MocMosaic CR
-nFiles = (
-    basePath
-    + "cinrad/bz2/Z_RADA_C_BABJ_20221225134644_P_DOR_Z9859_CREF_20221225_135233.bin"
-)
+nFiles = "Z_RADA_C_BABJ_20221225134644_P_DOR_Z9859_CREF_20221225_135233.bin"
 f = cinrad.io.read_auto(nFiles)
 dt = f.get_data()
 dt
@@ -134,7 +131,7 @@ Data variables:
 Attributes:
     scan_time:        2022-12-25 13:46:00
     site_code:        Z9859
-    site_name:        兴义Z9859
+    site_name:        Z9859
     site_longitude:   112.0
     site_latitude:    25.0
     tangential_reso:  0.1
