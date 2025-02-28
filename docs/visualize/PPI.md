@@ -23,11 +23,28 @@ import cartopy.crs as ccrs
 fig.geoax.scatter(
     x=112.34, y=32.22, s=500, c="r", marker=".", transform=ccrs.PlateCarree()
 )
+
+# 添加自定义的边界线
+# from cartopy.io.shapereader import Reader
+# reader = Reader('d:/边界.shp', encoding='gbk')
+# fig.geoax.add_geometries(
+#     geoms=list(reader.geometries()),
+#     crs=ccrs.PlateCarree(),
+#     edgecolor="red",
+#     facecolor="None",
+#     zorder=3,
+#     linewidth=0.5
+# )
+
 # 也就是说fig.geoax就是画布，你可以在上面画任何东西
-# 至于需要画什么上去，请参考cartopy的文档：
+# 你也可以使用plt.plot()来画
+# 不过fig.geoax支持在指定经纬度位置来绘制,参数加上transform=ccrs.PlateCarree()
+# 至于需要画什么上去，请参考matplotlib,cartopy的文档：
+# https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html
 # https://www.osgeo.cn/pygis/cartopy-feature.html#id2
 
-
+# 教程中都是在ipynb环境下运行，因此不需要保存也可以看到图片;
+# 在正式环境时，请用下面代码保存图片;
 # 将图片保存
 # fig("d:/")
 # 或者 fig("d:/abc.png")
