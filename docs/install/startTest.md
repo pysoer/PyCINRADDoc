@@ -1,6 +1,7 @@
 # 开始测试
 - 运行代码时，需要import导入cinrad，示例如下。
 - 说明：本文中的所有数据，雷达站所在的经纬度都作了**脱密，站号均改成了Z9999**，因此画图的位置是错的，请忽略。
+- 教程中都是在ipynb（jupyter notebook）环境下运行，因此不需要保存也可以看到图片，在正式环境时，需要保存为图片.
 ```python
 import cinrad
 import cartopy
