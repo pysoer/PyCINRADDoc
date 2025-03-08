@@ -18,16 +18,63 @@ fig = PPI(
 fig.plot_range_rings([10, 20, 30, 50, 150], color="white", linewidth=1)  # 用这个来画圈
 fig.gridlines(draw_labels=True, linewidth=1, color="white")  # 用这个来画经纬度网格线
 
-# 要在地图上画一个红色大圆点？
+# 如果是在ipynb下运行时，此时图片已经可以看到；
+# 如果是在正式的脚本下，则需要保存为图片文件。
+```
+
+### 还想在图上画点其他的？
+
+
+```python
+# 1.在地图上画一个红色大圆点
 import cartopy.crs as ccrs
 fig.geoax.scatter(
     x=112.34, y=32.22, s=500, c="r", marker=".", transform=ccrs.PlateCarree()
 )
-# 也就是说fig.geoax就是画布，你可以在上面画任何东西
-# 至于需要画什么上去，请参考cartopy的文档：
-# https://www.osgeo.cn/pygis/cartopy-feature.html#id2
 
+# 2.添加自定义的边界线
+from cartopy.io.shapereader import Reader
+reader = Reader('d:/边界.shp', encoding='gbk')
+fig.geoax.add_geometries(
+    geoms=list(reader.geometries()),
+    crs=ccrs.PlateCarree(),
+    edgecolor="red",
+    facecolor="None",
+    zorder=3,
+    linewidth=0.5
+)
 
+# 3.画射线
+from cinrad.projection import get_coordinate
+from matplotlib.collections import LineCollection
+import numpy as np
+
+c_lon, c_lat = f.stationlon, f.stationlat
+az = np.linspace(0, 2 * np.pi, 8) # 画8根
+lons, lats = get_coordinate(
+    distance=150, azimuth=az, elevation=0, centerlon=c_lon, centerlat=c_lat
+) # 射线顶端的经纬度位置
+lines = np.array(
+    [[(c_lon, c_lat), (lon, lat)] for lon, lat in zip(lons.flatten(), lats.flatten())]
+) # 所有的线段
+lc = LineCollection(lines, color="white", linewidth=1, transform=ccrs.PlateCarree())
+fig.geoax.add_collection(lc)
+```
+
+### 小结
+- 也就是说fig.geoax就是画布，你可以在上面画任何东西
+- 你也可以使用plt.plot()来画
+- 不过fig.geoax支持在指定经纬度位置来绘制,参数加上transform=ccrs.PlateCarree()
+- 至于需要画什么上去，请参考matplotlib,cartopy的文档：
+- https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html
+- https://www.osgeo.cn/pygis/cartopy-feature.html#id2
+- http://scitools.org.uk/cartopy/docs/latest/reference/generated/cartopy.mpl.geoaxes.GeoAxes.html
+
+### 保存图片
+- 教程中都是在ipynb环境下运行，因此不需要保存也可以看到图片;
+- 在正式环境时，请用下面代码保存图片
+  
+```python
 # 将图片保存
 # fig("d:/")
 # 或者 fig("d:/abc.png")
@@ -39,6 +86,7 @@ fig.geoax.scatter(
 ```python
 # 画一个透明图
 fig = PPI(data, dpi=300, style="transparent")
+extent = fig.geoax.get_extent(crs=ccrs.PlateCarree()) # 这个是透明图的边界位置经纬度
 ```
 ![An image](./image_23.png)
 

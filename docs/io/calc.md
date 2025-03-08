@@ -12,7 +12,7 @@
 ## 计算CR
 ```python
 r_list = list(f.iter_tilt(230, 'REF'))
-cr = cinrad.calc.quick_cr(r_list)
+cr = cinrad.calc.quick_cr(r_list, resolution=(1000,1000)) # resolution(tuple): 经纬度的个数长度，可选。
 cr
 ```
 ```md
