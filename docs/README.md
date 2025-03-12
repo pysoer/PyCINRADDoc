@@ -1,11 +1,18 @@
 ---
 home: true
 heroImage: /blank.png
+# bgImage: /bg.jpg
 heroText: PyCINRAD
+# heroFullScreen: true
 tagline: 国内最强大的雷达数据处理工具
-actionText: 快速上手 →
-actionLink: /install/
+actions:
+  - text: 快速上手
+    link: /install/
+    type: primary
+    rounded: true
+    # icon: /icons/arrow-right.svg
 lang: zh-CN
+footer: Copyright © 2024-present CyanideCN & Pysoer. <a href="https://beian.miit.gov.cn/#/Integrated/index">湘ICP备2024085395号-2</a>
 features:
 - title: 格式大师
   details: 支持多种CINRAD雷达数据格式，兼容性强，横扫CMA雷达基数据和产品，国内率先支持“探测中心拼图3.0”。
@@ -16,6 +23,4 @@ features:
 ---
 
 
-::: slot footer
-MIT Licensed | Copyright © 2024-present CyanideCN & Pysoer. [湘ICP备2024085395号-2](https://beian.miit.gov.cn/#/Integrated/index)
-:::
+

@@ -1,10 +1,11 @@
 # 标准格式基数据
-这里支持的有：标准格式雷达、标准格式相控阵雷达基数据，两种数据一个接口`cinrad.io.StandardData`。**PyCINRAD独有**
+-这里支持的格式有：标准格式雷达、标准格式相控阵雷达基数据    
+-**PyCINRAD独有** 两种数据一个接口`cinrad.io.StandardData`或`cinrad.io.read_auto`
 ## 数据读取
 
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9532_20200517124300_O_DOR_SAD_CAP_FMT.bin.bz2"
-f= cinrad.io.read_auto(nFiles)
+f= cinrad.io.StandardData(nFiles)
 data = f.get_data(0,230,"REF") # 读取第一层的反射率
 data
 ```
@@ -37,6 +38,36 @@ f.available_product(0) #第0个仰角有哪些产品可以读取
 ```md
 ['TREF', 'REF', 'SQI', 'ZDR', 'RHO', 'PHI', 'KDP', 'SNRH']
 ```
+
+### 雷达原始数据类型
+|数据类型|CINRAD中类型|描述|
+|:-:|:-:|:-:|
+|dBT|TREF|滤波前反射率（Total Reflectivity）|
+|dBZ|REF|滤波后反射率(Reflectivity)|
+|V|VEL|径向速度(Doppler Velocity)|
+|W|SW|谱宽（Spectrum Width）|
+|ΦDP|PHI|差分相移（Differential Phase）|
+|SQI|SQI|信号质量指数（Signal Quality Index）|
+|CPA|CPA|杂波相位一致性（Clutter Phase Alignment）|
+|ZDR|ZDR|差分反射率（Differential Reflectivity）|
+|LDR|LDR|退偏振比（Liner Differential Ratio）|
+|CC|RHO|协相关系数（Cross Correlation Coefficient）|
+|KDP|KDP|差分相移率（Specific Differential Phase）|
+|CP|CP|杂波可能性（Clutter Probability）|
+|HCL|HCL|双偏振相态分类（Hydro Classification）|
+|CF|CF|杂波标志位（Clutter Flag）|
+|SNRH|SNRH|水平通道信噪比（Horizontal Signal Noise Ratio）|
+|SNRV|SNRV|垂直通道信噪比（Vertical Signal Noise Ratio）|
+|POTS|POTS|时序相位(Phase Of Time Series)|
+|COP|COP|时序相位变化(Change of POTS Over Reference Map)|
+|VELSZ|VELSZ|SZ编码恢复速度(Velocity with SZ Recovery)|
+|DR|DR|退极化率 （Depolarization Ratio）|
+|Zc|Zc|订正后反射率（Corrected Reflectivity）|
+|Vc|Vc|订正后径向速度(Corrected Doppler Velocity)|
+|Wc|Wc|订正后谱宽（Corrected Spectrum Width）|
+|ZDRc|ZDRc|订正后差分反射率(Corrected Differential Reflectivity)|
+
+
 ```python
 # 读取90度、120公里处的数据
 data.interp(azimuth=np.deg2rad(90),distance=120)
@@ -64,9 +95,7 @@ Attributes:
     nyquist_vel:      8.37801
     task:             VCP21D
 ```
-```md
-['TREF', 'REF', 'SQI', 'ZDR', 'RHO', 'PHI', 'KDP', 'SNRH']
-```
+
 ```python
 f.available_tilt('REF') #REF产品有哪些仰角可以读取
 ```
@@ -164,7 +193,7 @@ Attributes:
 ```
 
 ## 修改体扫时间
-修改体扫时间、雷达名称、站号、经纬度等信息
+修改体扫时间、雷达名称、站号、经纬度等信息，只影响数据本身，如需要修改基数据文件，请看[修改标准格式基数据](https://pycinrad.cn/other/editBfile.html)
 
 ```python
 f.scantime = f.scantime + datetime.timedelta(hours=8) 
@@ -214,8 +243,23 @@ fig = cinrad.visualize.PPI(cc,style="black",add_city_names=True)
 
 ## 极坐标系转经纬度
 注意：`v1.9.2+`支持
+```md
+def polar_to_xy(field: Dataset, resolution: tuple = (1000, 1000)) -> Dataset:
+    r"""
+    Interpolate single volume data in polar coordinates into geographic coordinates
+
+    将单仰角数据从极坐标插值转换为经纬度坐标
+
+    Args:
+        field (xarray.Dataset): Original radial.
+        resolution(tuple): 经纬度的个数长度，可选。
+
+    Returns:
+        xarray.Dataset: Interpolated data in grid
+    """
+```
 ```python
-vel0_xy = cinrad.calc.polar_to_xy(vel0)
+vel0_xy = cinrad.calc.polar_to_xy(vel0, resolution= (1000, 1000))
 vel0_xy
 ```
 ```md
@@ -254,11 +298,11 @@ Attributes: []
 ```
 
 ## 导出为pyart
-请先安装arm_pyart: `conda install -c conda-forge arm_pyart`
+此函数只支持标准格式基数据，请先安装arm_pyart: `conda install -c conda-forge arm_pyart`
 ```python
 from cinrad.io.export import standard_data_to_pyart
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9731_20240510070522_O_DOR_SAD_CAP_FMT.bin.bz2"
-f = cinrad.io.read_auto(nFiles)
+f = cinrad.io.StandardData(nFiles)
 print(f.available_product(0))
 sradar = standard_data_to_pyart(f)
 sradar

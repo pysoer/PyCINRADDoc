@@ -1,4 +1,10 @@
-module.exports = {
+import { viteBundler } from '@vuepress/bundler-vite'
+import { defineUserConfig } from 'vuepress'
+import { hopeTheme } from "vuepress-theme-hope";
+import { slimsearchPlugin } from '@vuepress/plugin-slimsearch'
+
+export default defineUserConfig({
+	bundler: viteBundler(),
 	title: "PyCINRAD  官网",
 	description: "PyCINRAD官网首页 PyCINRAD文档",
 	lang: "zh-CN",
@@ -17,106 +23,120 @@ module.exports = {
 		["script", { src: "https://hm.baidu.com/hm.js?febea1f4b53924b48c8c661a05d8b63e" }],
 	],
 	base: "/", // 这是部署到github相关的配置 下面会讲
-	markdown: {
-		lineNumbers: true, // 代码块显示行号
-	},
-	themeConfig: {
+	theme: hopeTheme({
+		darkmode: "auto",
 		logo: "/radar.png",
-		sidebarDepth: 2, // e'b将同时提取markdown中h2 和 h3 标题，显示在侧边栏上。
+		sidebarDepth: 3, // e'b将同时提取markdown中h2 和 h3 标题，显示在侧边栏上。
 		lastUpdated: "Last Updated", // 文档更新时间：每个文件git最后提交的时间
 		displayAllHeaders: true,
-		nav: [
-			{ text: "Home", link: "/" }, // 内部链接 以docs为根目录
-			{ text: "文档", link: "/install/" }, // 内部链接 以docs为根目录
-			{ text: "Github", link: "https://github.com/CyanideCN/PyCINRAD" }, // 内部链接 以docs为根目录
-			{ text: "Pysoer", link: "https://github.com/pysoer/" }, // 外部链接
-			{ text: "QQ群", link: "https://qm.qq.com/cgi-bin/qm/qr?k=39_2pSpPnQg24dovCAXxN0eMKmVR8aX4&jump_from=webapi&authKey=tvKFX6eekUrBDJ/oRczm7JXKKTnM1Yfk+D3C9H6wacwVV2uuJ92lZj6DrPG9uo3p" }, // 外部链接
+		markdown: {
+			highlighter:{
+				type:"prismjs",
+				theme:"tomorrow-night",
+			}
+		},
+		navbar: [
+			{ text: "Home", link: "/" ,icon: "mdi:home"}, // 内部链接 以docs为根目录
+			{ text: "文档", link: "/install/", icon: "mdi:book-open-page-variant"}, // 内部链接 以docs为根目录
+			{ text: "Github",icon:"mdi:github", link: "https://github.com/CyanideCN/PyCINRAD" }, // 内部链接 以docs为根目录
+			// { text: "Pysoer",icon:"mdi:github", link: "https://github.com/pysoer/" }, // 外部链接
+			{ text: "QQ群", icon:"mdi:qqchat",link: "https://qm.qq.com/cgi-bin/qm/qr?k=39_2pSpPnQg24dovCAXxN0eMKmVR8aX4&jump_from=webapi&authKey=tvKFX6eekUrBDJ/oRczm7JXKKTnM1Yfk+D3C9H6wacwVV2uuJ92lZj6DrPG9uo3p" }, // 外部链接
 		],
 		sidebar: [
 			{
-				title: "简介",
-				path: "/install",
+				text: "简介",
+				link: "/install/",
+				icon: "mdi:home",
 				children: [
 					{
-						title: "安装",
-						path: "/install/install.md",
+						text: "安装",
+						link: "/install/install.md",
 					},
 					{
-						title: "引用导入",
-						path: "/install/startTest.md",
+						text: "引用导入",
+						link: "/install/startTest.md",
 					},
 				],
 			},
 			{
-				title: "数据读取",
-				path: "/io",
+				text: "数据读取",
+				link: "/io/",
+				icon: "mdi:file-document-outline",
 				children: [
 					{
-						title: "0.认识文件类型",
-						path: "/io/ftype.md",
+						text: "0.认识文件类型",
+						link: "/io/ftype.md",
 					},
 					{
-						title: "1.标准格式基数据",
-						path: "/io/StandardData.md",
+						text: "1.标准格式基数据",
+						link: "/io/StandardData.md",
 					},
 					{
-						title: "2.非标准格式基数据",
-						path: "/io/CinradReader.md",
+						text: "2.非标准格式基数据",
+						link: "/io/CinradReader.md",
 					},
 					{
-						title: "3.相控阵雷达基数据",
-						path: "/io/PhasedArrayData.md",
+						text: "3.相控阵雷达基数据",
+						link: "/io/PhasedArrayData.md",
 					},
 					{
-						title: "4.衍生产品计算",
-						path: "/io/calc.md",
+						text: "4.衍生产品计算",
+						link: "/io/calc.md",
 					},
 					{
-						title: "5.标准格式产品rose2.0",
-						path: "/io/StandardPUP.md",
+						text: "5.标准格式产品rose2.0",
+						link: "/io/StandardPUP.md",
 					},
 					{
-						title: "6.探测中心天气雷达拼图系统v3产品",
-						path: "/io/MocMosaic.md",
+						text: "6.探测中心拼图v3产品",
+						link: "/io/MocMosaic.md",
 					},
 					{
-						title: "7.swan3产品",
-						path: "/io/SWAN3.md",
+						text: "7.swan3产品",
+						link: "/io/SWAN3.md",
 					},
 				],
 			},
 			{
-				title: "数据可视化",
-				path: "/visualize",
+				text: "数据可视化",
+				link: "/visualize/",
+				icon: "mdi:chart-bubble",
 				children: [
 					{
-						title: "画图",
-						path: "/visualize/PPI.md",
+						text: "画图",
+						link: "/visualize/PPI.md",
 					},
 					{
-						title: "雷达拼图",
-						path: "/visualize/GridMapper.md",
+						text: "雷达拼图",
+						link: "/visualize/GridMapper.md",
 					},
 				],
 			},
 			{
-				title: "其他",
-				path: "/other",
+				text: "其他",
+				link: "/other/",
+				icon: "mdi:file-document-edit",
 				children: [
 					{
-						title: "Pyinstaller打包",
-						path: "/other/pyinstaller.md",
+						text: "Pyinstaller打包",
+						link: "/other/pyinstaller.md",
 					},
 					{
-						title: "修改基数据源文件",
-						path: "/other/editBfile.md",
+						text: "修改基数据源文件",
+						link: "/other/editBfile.md",
 					},
 				],
 			},
 		],
+		plugins: {
+			icon:{
+				assets:"iconify",
+			},
+			slimsearchPlugin: {
+			    
+			}
+		},
 		repo: "pysoer/PyCINRADDoc",
-		// 自定义仓库链接文字。默认从 `themeConfig.repo` 中自动推断为
-		// "GitHub"/"GitLab"/"Bitbucket" 其中之一，或是 "Source"。
 		repoLabel: "文档源码",
 
 		// 以下为可选的编辑链接选项
@@ -131,5 +151,5 @@ module.exports = {
 		editLinks: true,
 		// 默认为 "Edit this page"
 		editLinkText: "帮助我们改善此页面！",
-	},
-};
+	}),
+})
