@@ -20,7 +20,7 @@ print(np.__version__)   # 打印numpy版本
 print(cartopy.__version__)  # 打印cartopy版本
 ```
 ```md
-1.9.2
+1.9.3
 2.0.2
 0.23.0
 ```

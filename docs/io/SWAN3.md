@@ -1,9 +1,9 @@
-# SWAN3产品
-- cinrad.io.SWAN(file, product)接口用于读取SWAN3产品，例如CR、COTREC风场等。
+# SWAN3/风雷产品
+- cinrad.io.SWAN(file, product)接口用于读取SWAN3产品和风雷产品，例如CR、COTREC风场等。
   * file: 文件路径
   * prduct: 产品类型，例如`CR`。部分文件内产品类型是乱码或者不正确时，可以输入此参数来指定。
 ## 三维拼图 MOSAIC
-也就是多层CR拼图
+最好是加上product参数，因为部分文件内产品类型是乱码或者不正确（特别是风雷）。
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_OTHE_RADAMOSAIC_20240604020600.bin.bz2"
 f = cinrad.io.SWAN(nFiles, product="CR")
@@ -61,7 +61,7 @@ fig = PPI(dt_1, style="black")
 ## 拼图 CR
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_OTHE_RADAMCR_20220525085400.bin.bz2"
-f = cinrad.io.SWAN(nFiles)
+f = cinrad.io.SWAN(nFiles, product="CR")
 data = f.get_data()
 data
 ```
@@ -86,7 +86,7 @@ Attributes:
 不支持画图
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_TREC_20240520233600.BIN.BZ2"
-f = cinrad.io.SWAN(nFiles,product="TREC")
+f = cinrad.io.SWAN(nFiles, product="TREC")
 data = f.get_data()
 data
 ```

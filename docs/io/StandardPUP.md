@@ -1,12 +1,21 @@
 # 标准格式产品ROSE2.0
 `cinrad.io.StandardPUP`支持绝大部分ROSE_PUP的产品文件读取。
-- 已测试支持的产品：HCL、HI、V、MAX、HSR、WER、STI、CC、KDP、PDP、R、ZDR、CR、M、OHP、CAR、DOHP、DSTP、STP、VIL、SRM、THP、TVS、ET、VWP、DTHP、UAM、SWP、CAPPI
-- 已测试不支持的产品：ML、SS、CS    
+|画图|产品名称|描述|
+|:-:|:-:|:-:|
+|✅️|PPI|径向数据，包括R/V/ZDR/KDP/CC/OHP/HSR/HCL/QPE等|
+|✅️|PPI|栅格数据，包括MAX/ET/VCS/LRA/LRM/CR/VIL等|
+|✅️|CAPPI|Const Altitude PPI等高面显示|
+|✅️|VWP|风暴系列，包括WER/VWP/SWP/STI/HI/MESO/TVS/UAM等|
+|✅️|OHP|降水系列，包括QPE/STP/OHP/THP/等|
+|❌|RHI|Range Height Indicator距离高度显示|
+|❌|SS|风场系列，包括CS/SS/VAD等|
+|❌|ML|融化层识别|
+
 
 ## BR产品
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9094_20230402071419_P_DOR_CAD_R_300_400_5_FMT.bin"
-f = cinrad.io.read_auto(nFiles)
+f = cinrad.io.StandardPUP(nFiles)
 dt = f.get_data()
 dt
 ```
@@ -35,7 +44,7 @@ Attributes:
 ## CR产品
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9730_20240510000142_P_DOR_SB_CR_250X250_230_NUL_FMT.bin"
-f = cinrad.io.read_auto(nFiles)
+f = cinrad.io.StandardPUP(nFiles)
 dt = f.get_data()
 dt
 ```
@@ -61,7 +70,7 @@ Attributes:
 这个产品实际上读取出来只能看到`俯视最大数据投影区`的数据，因为只读取了1遍。
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_ZN701_20230805000000_P_DOR_YLD2-D_CR_150X150_230_NUL_FMT.bin.bz2"
-f = cinrad.io.read_auto(nFiles)
+f = cinrad.io.StandardPUP(nFiles)
 data = f.get_data()
 
 data
@@ -85,9 +94,10 @@ Attributes:
     tangential_reso:  0.15
 ```
 ## WER产品
+如果需要画图，则需要提取某一层的数据，然后再用PPI画图。
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9731_20240519000105_P_DOR_SAD_WER_250_50X50_NUL_FMT.bin"
-f= cinrad.io.read_auto(nFiles)
+f= cinrad.io.StandardPUP(nFiles)
 data = f.get_data()
 
 data
@@ -120,9 +130,10 @@ Attributes:
 ```
 
 ## HCL产品
+请注意与calc.hydro_class区分，这里是读取ROSE处理后的产品文件。
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9735_20240511082558_P_DOR_SAD_HCL_250_230_5_FMT.bin"
-f = cinrad.io.read_auto(nFiles)
+f = cinrad.io.StandardPUP(nFiles)
 hcl = f.get_data()
 print(hcl)
 fig = cinrad.visualize.PPI(hcl, add_city_names=True, dpi=300, style="black")
@@ -167,7 +178,7 @@ class NumpyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-f = cinrad.io.read_auto(basePath+'cinrad/bz2/Z9737_20230424171836Z_STI_00_58')
+f = cinrad.io.StandardPUP(basePath+'cinrad/bz2/Z9737_20230424171836Z_STI_00_58')
 data = f.get_data()
 js = json.dumps(data, cls = NumpyEncoder)
 js
@@ -223,7 +234,7 @@ js
 ## UAM产品
 ```python
 nFiles = basePath + "/cinrad/bz2/Z9737_20231128135254Z_UAM_00_hail"
-f = cinrad.io.read_auto(nFiles)
+f = cinrad.io.StandardPUP(nFiles)
 dt = f.get_data()
 
 dt
@@ -249,7 +260,7 @@ Attributes:
 ## VEL速度产品
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9735_20240510000045_P_DOR_SAD_V_500_230_5_FMT.bin"
-f = cinrad.io.read_auto(nFiles)
+f = cinrad.io.StandardPUP(nFiles)
 dt = f.get_data()
 print(dt)
 dt = dt.rename({'Vc': 'VEL'})
@@ -342,13 +353,9 @@ Attributes:
 cinrad目前不支持计算CAPPI，这里指的是ROSE生成的产品
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9094_20230402073754_P_DOR_CAD_CAR_150_200_NUL_FMT.bin"
-f = cinrad.io.read_auto(nFiles)
-print(type(f).__name__)
+f = cinrad.io.StandardPUP(nFiles)
 dt = f.get_data()
 dt
-```
-```md
-StandardPUP
 ```
 ```md
 <xarray.Dataset> Size: 12MB
@@ -383,7 +390,7 @@ fig = cinrad.visualize.PPI(dt0)
 ## HI产品
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9094_20230402070825_P_DOR_CAD_HI_NUL_200_NUL_FMT.bin"
-f = cinrad.io.read_auto(nFiles)
+f = cinrad.io.StandardPUP(nFiles)
 data = f.get_data()
 data
 ```
@@ -410,7 +417,7 @@ Attributes:
 ## OHP产品
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9094_20230402072013_P_DOR_CAD_OHP_150_200_NUL_FMT.bin"
-f = cinrad.io.read_auto(nFiles)
+f = cinrad.io.StandardPUP(nFiles)
 data = f.get_data()
 data
 ```
@@ -449,7 +456,7 @@ import numpy as np
 
 warnings.filterwarnings("ignore")
 nFiles = "d:/temp/cinrad/bz2/Z_RADR_I_Z9731_20240126000025_P_DOR_SAD_VWP_NUL_NUL_NUL_FMT.bin"
-f = cinrad.io.read_auto(nFiles)
+f = cinrad.io.StandardPUP(nFiles)
 vwp = f.get_data()
 
 # 有部分雷达的产品输出时，风速有小于0的情况，需要过滤掉

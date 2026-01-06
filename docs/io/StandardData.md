@@ -298,7 +298,8 @@ Attributes: []
 ```
 
 ## 导出为pyart
-此函数只支持标准格式基数据，请先安装arm_pyart: `conda install -c conda-forge arm_pyart`
+此函数只支持标准格式基数据    
+请先安装arm_pyart: `pip install arm_pyart`
 ```python
 from cinrad.io.export import standard_data_to_pyart
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9731_20240510070522_O_DOR_SAD_CAP_FMT.bin.bz2"

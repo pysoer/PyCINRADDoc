@@ -92,7 +92,7 @@ export default defineUserConfig({
 						link: "/io/MocMosaic.md",
 					},
 					{
-						text: "7.swan3产品",
+						text: "7.swan3和风雷产品",
 						link: "/io/SWAN3.md",
 					},
 				],

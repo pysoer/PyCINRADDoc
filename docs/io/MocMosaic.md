@@ -1,7 +1,7 @@
 # 探测中心拼图v3.0产品
-cinrad.io.MocMosaic和cinrad.io.read_auto支持读取探测中心拼图v3.0产品，包括拼图和单站产品。    
-需要版本>=1.9.0
-## 拼图
+`cinrad.io.MocMosaic`支持读取探测中心拼图v3.0产品，包括拼图产品和单站产品，绝大部分类型都支持。    
+需要cinrad版本>=1.9.0
+## 拼图产品
 ```python
 # MocMosaic
 nFiles = (basePath+"cinrad/bz2/Z_RADA_C_BABJ_20240925080617_P_DOR_ACHN_CREF_20240925_080000.bin")
@@ -34,31 +34,27 @@ Dimensions:  ()
 Data variables:
     CR       float64 8B 70.0
 ```
+
+### CAPPI高度
+如果是CAPPI产品，这个参数表示CAPPI的高度:meter
 ```python
-# 如果是CAPPI产品，这个参数表示CAPPI的高度:meter
 f.header["height"]
-```
-```md
-array([0], dtype=uint16)
 ```
 ```python
 # 计算REF大于35的数量，这代表不了面积
 dt["CR"].values[dt["CR"].values > 35].shape
-```
-```md
-(21138,)
+# (21138,)
 ```
 ```python
 # 画图
-# dt = dt.rename({"CREF": "CR"})  # 重命名，因为PPI并不支持CAP，v1.9.1以下需要这句
 fig = PPI(dt, style="black", extent=[105, 110, 30, 35], add_city_names=True)
 ```
 ![An image](./image_14.png)
-## 单站
+## 单站产品
 ### 产品CAPPI
 ```python
 nFiles = "Z_RADA_C_BABJ_20240520001131_P_DOR_Z9734_CAP_20240520_000532.bin"
-f = cinrad.io.read_auto(nFiles)
+f = cinrad.io.MocMosaic(nFiles)
 dt = f.get_data()
 dt
 ```
@@ -82,40 +78,18 @@ Attributes:
     elevation:        0
     task:             VCP21
 ```
+### 进一步处理
+发现是一个三维数据，多了个height维度，如果要画图的话，需要选择一个高度层
 ```python
-# 发现height维度，如果要画图的话，需要选择一个高度层
 dt0 = dt.sel(height=1500)
-dt0
-```
-```md
-<xarray.Dataset> Size: 3MB
-Dimensions:    (latitude: 575, longitude: 645)
-Coordinates:
-    height     int64 8B 1500
-  * latitude   (latitude) float64 5kB 24.06 24.07 24.08 ... 29.79 29.8 29.81
-  * longitude  (longitude) float64 5kB 109.4 109.4 109.4 ... 115.8 115.8 115.8
-Data variables:
-    REF        (latitude, longitude) float64 3MB nan nan nan nan ... nan nan nan
-Attributes:
-    scan_time:        2024-05-20 00:05:00
-    site_code:        Z9734
-    site_name:        g_Z9734
-    site_longitude:   112.0
-    site_latitude:    26.0
-    tangential_reso:  0.1
-    range:            320
-    elevation:        0
-    task:             VCP21
-```
-```python
 fig = PPI(dt0, style="black", add_city_names=True)
 ```
 ![An image](./image_15.png)
 
-### 普通反射率数据    
+### REF数据    
 ```python
 nFiles = "Z_RADA_C_BABJ_20221225134644_P_DOR_Z9859_CREF_20221225_135233.bin"
-f = cinrad.io.read_auto(nFiles)
+f = cinrad.io.MocMosaic(nFiles)
 dt = f.get_data()
 dt
 ```
