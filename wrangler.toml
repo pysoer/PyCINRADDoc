@@ -1,0 +1,3 @@
+name = "pycinrad"
+[assets]
+directory = "docs/.vuepress/dist"
