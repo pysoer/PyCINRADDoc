@@ -4,6 +4,13 @@ SB/CC/CA等少部分数据最好是用CinradReader并手动输入参数radar_typ
 ```python
 nFiles = basePath + "/cinrad/bz2/Z_RADR_I_Z9636_20200625140000_O_DOR_SB_CAP.bz2"
 f = cinrad.io.CinradReader(nFiles, radar_type="SB")
+# 必须手动指定雷达站的经纬度信息，否则无法画图。
+f.stationlon = 111.5
+f.stationlat = 28.6
+f.radarheight = 0.56 # 单位 km
+# 其他的雷达站信息也可以手动指定修改
+f.name = "Beijing"
+f.code = "Z0010"
 print(type(f).__name__)
 data = f.get_data(0, 230, "REF")
 data
