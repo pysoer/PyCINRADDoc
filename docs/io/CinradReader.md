@@ -7,7 +7,7 @@ f = cinrad.io.CinradReader(nFiles, radar_type="SB")
 # 必须手动指定雷达站的经纬度信息，否则无法画图。
 f.stationlon = 111.5
 f.stationlat = 28.6
-f.radarheight = 0.56 # 单位 km
+f.radarheight = 885 # 单位 m
 # 其他的雷达站信息也可以手动指定修改
 f.name = "Beijing"
 f.code = "Z0010"
