@@ -37,8 +37,8 @@ def modify_fmt_site_config(
     :param site_name: 站点名称
     :param latitude: 纬度
     :param longitude: 经度
-    :param atenna_height: 天线高度
-    :param ground_height: 地面高度
+    :param atenna_height: 天线高度 m
+    :param ground_height: 地面高度 m
     :param radar_type: 雷达类型
         1–SA 2–SB
         3–SC 4–SAD
@@ -74,10 +74,10 @@ def modify_fmt_site_config(
         longitude_encoded = struct.pack("f", longitude)
         content = content[:76] + longitude_encoded + content[80:]
     if atenna_height:
-        atenna_height_encoded = struct.pack("f", atenna_height)
+        atenna_height_encoded = struct.pack("i", atenna_height)
         content = content[:80] + atenna_height_encoded + content[84:]
     if ground_height:
-        ground_height_encoded = struct.pack("f", ground_height)
+        ground_height_encoded = struct.pack("i", ground_height)
         content = content[:84] + ground_height_encoded + content[88:]
     if radar_type:
         radar_type_encoded = struct.pack("h", radar_type)
@@ -104,8 +104,8 @@ modify_fmt_site_config(
     site_name="hello",
     latitude=32.1,
     longitude=118.9,
-    atenna_height=100,
-    ground_height=100,
+    atenna_height=1225,
+    ground_height=1200,
     radar_type=1,
 )
 ```
