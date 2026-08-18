@@ -1,9 +1,9 @@
 {
-"name": "pycinrad",
-"installCommand": "npm install",
-"buildCommand": "npm run docs:build",
-"assets": {
-  "directory": "./dist",
-  "notFoundStrategy": "singlePageApplication"
+  "name": "pycinrad",
+  "installCommand": "npm install",
+  "buildCommand": "npm run docs:build",
+  "assets": {
+    "directory": "./docs/.vuepress/dist", 
+    "notFoundStrategy": "singlePageApplication"
   }
 }
